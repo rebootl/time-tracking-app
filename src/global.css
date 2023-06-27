@@ -1,0 +1,73 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+
+  --color-bg: #121225;
+  --color-in-bg: #123;
+  --color-in-border: rgb(54, 60, 139);
+  --color-text: #fff;
+
+  font-family: sans-serif;
+  color: var(--color-text);
+}
+
+h1 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+input {
+  background-color: var(--color-in-bg);
+  font-size: 1rem;
+  /*border: 2px solid var(--color-in-border);*/
+  border: 1px solid var(--color-in-border);
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+/* input type submit */
+/*
+input[type="submit"] {
+  background-color: var(--color-in-border);
+  color: #fff;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  border: 0px solid var(--color-in-border);
+  border-radius: 0.25rem;
+  padding: 0.7rem;
+  cursor: pointer;
+  width: initial;
+}
+*/
+
+button {
+  background-color: var(--color-in-border);
+  color: #fff;
+  letter-spacing: 0.1rem;
+  border: 0px solid var(--color-in-bg);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+select {
+  background-color: var(--color-border);
+  border: 1px solid var(--color-in-border);
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--color-in-border);
+}
