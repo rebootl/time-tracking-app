@@ -77,6 +77,25 @@ export const actions = {
     if (!projectId) return fail(401, { projectId, missing: true });
     const comment = data.get('comment')?.toString();
 
+    const currentStint = await prisma.stint.findFirst({
+      where: {
+        userId: locals.user.id as number,
+        end: null,
+      },
+    });
+
+    if (currentStint) {
+      // end current stint
+      const r = await prisma.stint.update({
+        where: {
+          id: currentStint.id,
+        },
+        data: {
+          end: new Date(),
+        }
+      });
+    }
+
     const r = await prisma.stint.create({
       data: {
         userId: locals.user.id as number,

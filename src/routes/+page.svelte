@@ -1,7 +1,33 @@
 <script lang="ts">
   import type { PageData } from './$types';
+  import dayjs from 'dayjs';
 
   export let data: PageData;
+
+  function getTime(date: Date) {
+    return dayjs(date).format('HH:mm');
+  }
+
+  function getDuration(start: Date, end: Date) {
+    const duration = dayjs(end).diff(dayjs(start), 'second');
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = duration % 60;
+    //console.log("get duration")
+    //console.log(durationInterval)
+    return `${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  let duration = "";
+  let durationInterval : ReturnType<typeof setTimeout> | null = null;
+
+  if (data.lastStint && !data.lastStint.end && !durationInterval) {
+    durationInterval = setInterval(
+      () => duration = getDuration(data.lastStint!.start, new Date()),
+      1000
+    );
+  }
+
 </script>
 
 <h2>Stint</h2>
@@ -16,14 +42,19 @@
       </em>
     </div>
     <div>Project: {data.lastStint.project.name}</div>
-    <div>Start: {data.lastStint.start}</div>
-    <div>End: {data.lastStint.end}</div>
+    <div>Start: {getTime(data.lastStint.start)}</div>
+    {#if data.lastStint.end}
+      <div>End: {getTime(data.lastStint.end)}</div>
+      <div>Duration: {getDuration(data.lastStint.start, data.lastStint.end)}</div>
+    {:else}
+      <div>Duration: {duration}</div>
+    {/if}
     <div>Comment: {data.lastStint.comment}</div>
   </div>
   {#if !data.lastStint.end}
     <form action="?/endStint" method="POST">
       <input type="hidden" name="stintId" value="{data.lastStint.id}" />
-      <button>[ END STINT ]</button>
+      <button>END STINT</button>
     </form>
   {:else}
     <div>
@@ -36,8 +67,6 @@
 </div>
 {/if}
 
-<h2>Projects</h2>
-
 <div class="form-box">
   <form action="?/addStint" method="POST">
     <select name="projectId">
@@ -45,10 +74,6 @@
         <option value="{project.id}">{project.name}</option>
       {/each}
     </select>
-    <div>
-      <button>[ DETAILS ]</button>
-      <button>[ EDIT / DELETE ]</button>
-    </div>
     <input type="text" name="comment" placeholder="Comment for new stint" />
     {#if data.lastStint && !data.lastStint.end}
       <input type="hidden" name="lastStintId" value="{data.lastStint.id}" />
@@ -59,6 +84,22 @@
   </form>
 </div>
 
+<h2>Projects</h2>
+
+<div class="form-box">
+  <form action="?/editStint" method="POST">
+    <select name="projectId">
+      {#each data.projects as project}
+        <option value="{project.id}">{project.name}</option>
+      {/each}
+    </select>
+    <div>
+      <button>[ DETAILS ]</button>
+      <button>[ EDIT / DELETE ]</button>
+    </div>
+  </form>
+</div>
+
 <h3>Add Project</h3>
 
 <div class="form-box">
@@ -66,7 +107,7 @@
     <input type="text" name="name" placeholder="Name" />
     <input type="text" name="description" placeholder="Description" />
     <input type="color" name="color" />
-    <button type="submit">ADD</button>
+    <button>ADD</button>
   </form>
 </div>
 
