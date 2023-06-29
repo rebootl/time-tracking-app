@@ -87,7 +87,7 @@
 <h2>Projects</h2>
 
 <div class="form-box">
-  <form action="?/editStint" method="POST">
+  <form action="?/editProject" method="POST">
     <select name="projectId">
       {#each data.projects as project}
         <option value="{project.id}">{project.name}</option>
@@ -95,7 +95,7 @@
     </select>
     <div>
       <button>[ DETAILS ]</button>
-      <button>[ EDIT / DELETE ]</button>
+      <button>EDIT / DELETE</button>
     </div>
   </form>
 </div>

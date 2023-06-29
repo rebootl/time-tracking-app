@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import prisma from '$lib/server/prisma';
 import type { PageServerLoad } from './$types';
+import type { Project } from '@prisma/client';
 
 export const load = (async ({ locals, params }) => {
 	if (!locals.user) throw redirect(302, `/login`);
@@ -11,9 +12,9 @@ export const load = (async ({ locals, params }) => {
       userId: locals.user.id as number
     },
     // sort by created date
-    //orderBy: {
-      //  createdAt: 'desc'
-      //}
+    orderBy: {
+      updatedAt: 'desc'
+    }
   });
 
   const lastStint = await prisma.stint.findFirst({
@@ -60,11 +61,22 @@ export const actions = {
         name: name,
         description: description,
         color: color as string,
-      }
+      } as Project
     });
 
     console.log("addProject", r);
     // -> check for errors
+  },
+  editProject: async ({ locals, request }) => {
+    if (!locals.user) throw redirect(302, `/login`);
+
+    const data = await request.formData();
+
+    const projectId = data.get('projectId')?.toString();
+    // -> check fail code 401??
+    if (!projectId) return fail(401, { projectId, missing: true });
+    console.log("editProject", projectId);
+    throw redirect(303, `/edit-project/${projectId}`);
   },
   addStint: async ({ locals, request }) => {
     if (!locals.user) throw redirect(302, `/login`);
