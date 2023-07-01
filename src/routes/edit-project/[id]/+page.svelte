@@ -32,7 +32,7 @@
     <input type="hidden" name="projectId" value="{data.project.id}" />
     <button on:click="{confirmDelete}">DELETE</button>
   </form>
-  <a href="../">CANCEL</a>
+  <a href="/">Cancel</a>
 </div>
 
 <style>

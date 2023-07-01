@@ -47,36 +47,36 @@ export const actions = {
 
     const data = await request.formData();
 
-    const name = data.get('name')?.toString();
-    if (!name) return fail(401, { name, missing: true });
-    const description = data.get('description')?.toString();
+    const name = data.get('name');
+    if (typeof name !== 'string') return fail(400, { name, missing: true });
+
+    const description = data.get('description');
+    if (typeof description !== 'string') return fail(400, { description, missing: true });
+
     const color = data.get('color');
+    if (typeof color !== 'string') return fail(400, { color, missing: true });
     // -> verify color is hex color
 
-    //console.log("addProject", name, description, color);
-
-    const r = await prisma.project.create({
-      data: {
-        userId: locals.user.id as number,
-        name: name,
-        description: description,
-        color: color as string,
-      } as Project
-    });
+    let r;
+    try {
+      r = await prisma.project.create({
+        data: {
+          userId: locals.user.id as number,
+          name: name,
+          description: description,
+          color: color,
+        } as Project
+      });
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log("Error adding project", e.message);
+        return fail(400, { error: e.message });
+      }
+      console.log("Unknown error adding project", e);
+      return fail(400, { error: "Unknown error" });
+    }
 
     console.log("addProject", r);
-    // -> check for errors
-  },
-  editProject: async ({ locals, request }) => {
-    if (!locals.user) throw redirect(302, `/login`);
-
-    const data = await request.formData();
-
-    const projectId = data.get('projectId')?.toString();
-    // -> check fail code 401??
-    if (!projectId) return fail(401, { projectId, missing: true });
-    console.log("editProject", projectId);
-    throw redirect(303, `/edit-project/${projectId}`);
   },
   addStint: async ({ locals, request }) => {
     if (!locals.user) throw redirect(302, `/login`);

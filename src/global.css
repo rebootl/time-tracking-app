@@ -6,6 +6,7 @@
   --color-in-bg: #123;
   --color-in-border: rgb(54, 60, 139);
   --color-text: #fff;
+  --color-link: #56ffaa;
 
   font-family: sans-serif;
   color: var(--color-text);
@@ -19,6 +20,14 @@ h1 {
 p {
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+a {
+  color: var(--color-link);
+}
+
+a:visited {
+  color: var(--color-link);
 }
 
 input {

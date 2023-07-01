@@ -1,22 +1,8 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import dayjs from 'dayjs';
+  import { getTime, getDuration } from '$lib/helper';
 
   export let data: PageData;
-
-  function getTime(date: Date) {
-    return dayjs(date).format('HH:mm');
-  }
-
-  function getDuration(start: Date, end: Date) {
-    const duration = dayjs(end).diff(dayjs(start), 'second');
-    const hours = Math.floor(duration / 3600);
-    const minutes = Math.floor((duration % 3600) / 60);
-    const seconds = duration % 60;
-    //console.log("get duration")
-    //console.log(durationInterval)
-    return `${hours}h ${minutes}m ${seconds}s`;
-  }
 
   let duration = "";
   let durationInterval : ReturnType<typeof setTimeout> | null = null;
@@ -58,14 +44,13 @@
     </form>
   {:else}
     <div>
-      <form action="?/editStint" method="POST">
-        <input type="hidden" name="stintId" value="{data.lastStint.id}" />
-        <button>[ EDIT / DELETE ]</button>
-      </form>
+      <a href="/edit-stint/{data.lastStint.id}">Edit / Delete Stint</a>
     </div>
   {/if}
 </div>
 {/if}
+
+<h3>New Stint</h3>
 
 <div class="form-box">
   <form action="?/addStint" method="POST">
@@ -86,18 +71,18 @@
 
 <h2>Projects</h2>
 
-<div class="form-box">
-  <form action="?/editProject" method="POST">
-    <select name="projectId">
-      {#each data.projects as project}
-        <option value="{project.id}">{project.name}</option>
-      {/each}
-    </select>
-    <div>
-      <button>[ DETAILS ]</button>
-      <button>EDIT / DELETE</button>
+<div class="projects-list">
+  {#each data.projects as project}
+    <div class="project">
+      <div class="project-color" style="background-color: {project.color}"></div>
+        {project.name}
+        <div class="project-link">
+          <a href="/project-details/{project.id}">Details</a>
+          <a href="/edit-project/{project.id}">Edit</a>
+        </div>
+      <!--<a href="/edit-project/{project.id}">Edit</a>-->
     </div>
-  </form>
+  {/each}
 </div>
 
 <h3>Add Project</h3>
@@ -121,5 +106,26 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+  }
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .project {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    border-bottom: 1px solid var(--color-in-border);
+    padding-bottom: 10px;
+  }
+  .project-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 5%;
+    margin-right: 10px;
+  }
+  .project-link {
+    margin-left: auto;
   }
 </style>
