@@ -25,7 +25,7 @@ export const load = (async ({ locals, params }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  updateStint: async ({ locals, request }) => {
+  updateStint: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -69,17 +69,16 @@ export const actions = {
         // Example:
         console.error("Error updating stint:", e);
         return fail(400, { error: e.message });
-      } else {
-        // Handle other types of errors
-        console.error("Error updating stint:", e);
-        return fail(400, { error: "Unknown error occurred" });
       }
+      // Handle other types of errors
+      console.error("Error updating stint:", e);
+      return fail(400, { error: "Unknown error occurred" });
     }
 
     console.log("Updated stint:", r);
     throw redirect(302, '/project-details/' + r.projectId);
   },
-  deleteStint: async ({ locals, request }) => {
+  deleteStint: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -109,11 +108,10 @@ export const actions = {
         // Example: console.error("Error updating stint:", e);
         console.error("Error deleting stint:", e);
         return fail(400, { error: e.message });
-      } else {
-        // Handle other types of errors
-        console.error("Error deleting stint:", e);
-        return fail(400, { error: "Unknown error occurred" });
       }
+      // Handle other types of errors
+      console.error("Error deleting stint:", e);
+      return fail(400, { error: "Unknown error occurred" });
     }
 
     console.log("Deleted stint:", r);

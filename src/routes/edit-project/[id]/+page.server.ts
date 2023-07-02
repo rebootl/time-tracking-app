@@ -22,7 +22,7 @@ export const load = (async ({ locals, params }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  updateProject: async ({ locals, request }) => {
+  updateProject: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -65,16 +65,15 @@ export const actions = {
       if (e instanceof Error) {
         console.error(e);
         return fail(400, { error: e.message });
-      } else {
-        console.error(e);
-        return fail(400, { error: "Unknown error" });
       }
+      console.error(e);
+      return fail(400, { error: "Unknown error" });
     }
 
     console.log("Updated project:", r);
     throw redirect(302, '/');
   },
-  deleteProject: async ({ locals, request }) => {
+  deleteProject: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -102,10 +101,9 @@ export const actions = {
       if (e instanceof Error) {
         console.error(e);
         return fail(400, { error: e.message });
-      } else {
-        console.error(e);
-        return fail(400, { error: "Unknown error" });
       }
+      console.error(e);
+      return fail(400, { error: "Unknown error" });
     }
 
     console.log("Deleted project:", r);

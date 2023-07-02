@@ -14,7 +14,7 @@
     // Prevent the default form submission
     event.preventDefault();
 
-    if (confirm('Are you sure you want to delete this project?')) {
+    if (confirm('Are you sure you want to delete this stint?')) {
       const f = document.getElementById('delete-form') as HTMLFormElement;
       f.submit();
     }

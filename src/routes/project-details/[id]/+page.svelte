@@ -68,9 +68,9 @@
     flex-direction: column;
     gap: 15px;
   }
-  .form-box form {
+  /*.form-box form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-  }
+  }*/
 </style>

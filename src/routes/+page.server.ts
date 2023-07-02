@@ -41,8 +41,7 @@ export const load = (async ({ locals, params }) => {
 
 // needed when coming from login via redirect (POST)
 export const actions = {
-	//default: async () => {},
-  addProject: async ({ locals, request }) => {
+  addProject: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -76,18 +75,18 @@ export const actions = {
       return fail(400, { error: "Unknown error" });
     }
 
-    console.log("addProject", r);
+    console.log("added Project", r);
   },
-  addStint: async ({ locals, request }) => {
+  addStint: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
-    console.log("addStint", data);
 
-    const projectId = data.get('projectId')?.toString();
-    // -> check fail code 401??
-    if (!projectId) return fail(401, { projectId, missing: true });
-    const comment = data.get('comment')?.toString();
+    const projectId = data.get('projectId');
+    if (typeof projectId !== 'string') return fail(400, { projectId, missing: true });
+
+    const comment = data.get('comment');
+    if (typeof comment !== 'string') return fail(400, { comment, missing: true });
 
     const currentStint = await prisma.stint.findFirst({
       where: {
@@ -98,49 +97,73 @@ export const actions = {
 
     if (currentStint) {
       // end current stint
-      const r = await prisma.stint.update({
+      let r;
+      try {
+        r = await prisma.stint.update({
+          where: {
+            id: currentStint.id,
+          },
+          data: {
+            end: new Date(),
+          }
+        });
+      } catch (e) {
+        if (e instanceof Error) {
+          console.log("Error ending current stint", e.message);
+          return fail(400, { error: e.message });
+        }
+        console.log("Unknown error ending current stint", e);
+        return fail(400, { error: "Unknown error" });
+      }
+    }
+
+    let r;
+    try {
+      r = await prisma.stint.create({
+        data: {
+          userId: locals.user.id as number,
+          projectId: parseInt(projectId),
+          comment: comment,
+        }
+      });
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log("Error adding stint", e.message);
+        return fail(400, { error: e.message });
+      }
+      console.log("Unknown error adding stint", e);
+      return fail(400, { error: "Unknown error" });
+    }
+
+    console.log("added Stint", r);
+  },
+  endStint: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
+    if (!locals.user) throw redirect(302, `/login`);
+
+    const data = await request.formData();
+
+    const id = data.get('stintId');
+    if (typeof id !== 'string') return fail(400, { id, missing: true });
+
+    let r;
+    try {
+      r = await prisma.stint.update({
         where: {
-          id: currentStint.id,
+          id: parseInt(id),
         },
         data: {
           end: new Date(),
         }
       });
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log("Error ending stint", e.message);
+        return fail(400, { error: e.message });
+      }
+      console.log("Unknown error ending stint", e);
+      return fail(400, { error: "Unknown error" });
     }
 
-    const r = await prisma.stint.create({
-      data: {
-        userId: locals.user.id as number,
-        projectId: parseInt(projectId),
-        comment: comment,
-      }
-    });
-
-    console.log("addStint", r);
-    // -> check for errors
-    // -> redirect?
-  },
-  endStint: async ({ locals, request }) => {
-    if (!locals.user) throw redirect(302, `/login`);
-
-    const data = await request.formData();
-    console.log("endStint", data);
-
-    const id = data.get('stintId')?.toString();
-    // -> check fail code 401??
-    if (!id) return fail(401, { id, missing: true });
-
-    const r = await prisma.stint.update({
-      where: {
-        id: parseInt(id),
-      },
-      data: {
-        end: new Date(),
-      }
-    });
-
-    console.log("endStint", r);
-    // -> check for errors
-    // -> redirect?
+    console.log("ended Stint", r);
   }
 };
