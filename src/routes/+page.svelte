@@ -27,7 +27,11 @@
         {#if data.lastStint.end}Ended{:else}Running{/if}
       </em>
     </div>
-    <div>Project: {data.lastStint.project.name}</div>
+    <div class="line">
+      Project:&nbsp;
+      <div class="project-color" style="background-color: {data.lastStint.project.color}"></div>
+      {data.lastStint.project.name}
+    </div>
     <div>Start: {getTime(data.lastStint.start)}</div>
     {#if data.lastStint.end}
       <div>End: {getTime(data.lastStint.end)}</div>
@@ -127,5 +131,8 @@
   }
   .project-link {
     margin-left: auto;
+  }
+  .line {
+    display: flex;
   }
 </style>
