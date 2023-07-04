@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getTime, getDate, getDuration } from '$lib/helper';
   import type { Stint, Project } from '@prisma/client';
+    import ProjectLine from './ProjectLine.svelte';
   
   // to be super correct use this StintWithProject | Stint
   /*interface StintWithProject extends Stint {
@@ -26,12 +27,7 @@
 <div class="box" style={ !stint.end && project ? `border: 1px solid ${project.color}` : '' }>
 
   {#if overview && project}
-  <strong>
-    <div class="line">
-      <span class="project-color" style="background-color: {project.color}"></span>
-      {project.name}
-    </div>
-  </strong>
+    <ProjectLine project={project} strong={true} />
   {/if}
 
   <table>
@@ -125,15 +121,6 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-  }
-  .project-color {
-    width: 20px;
-    height: 20px;
-    border-radius: 5%;
-    margin-right: 10px;
-  }
-  .line {
-    display: flex;
   }
   td:first-child {
     color: var(--text-color-light);

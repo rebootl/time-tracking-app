@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
+  import ProjectLine from '$lib/ProjectLine.svelte';
 
   export let data: PageData;
 
@@ -10,13 +11,7 @@
 <div class="projects-list">
   {#each data.projects as project}
     <div class="project">
-      <div class="project-color" style="background-color: {project.color}"></div>
-        {project.name}
-        <div class="project-link">
-          <a href="/project-details/{project.id}">Details</a>
-          <a href="/edit-project/{project.id}">Edit</a>
-        </div>
-      <!--<a href="/edit-project/{project.id}">Edit</a>-->
+      <ProjectLine project={project} details={true} edit={true} />
     </div>
   {/each}
 </div>
@@ -50,18 +45,8 @@
   }
   .project {
     display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
     border-bottom: 1px solid var(--color-in-border);
     padding-bottom: 10px;
   }
-  .project-color {
-    width: 20px;
-    height: 20px;
-    border-radius: 5%;
-    margin-right: 10px;
-  }
-  .project-link {
-    margin-left: auto;
-  }
+
 </style>
