@@ -28,7 +28,7 @@
   <div>Description: {data.project.description}</div>
 {/if}
 <div>Total Duration: {getTotalDuration(data.stints)}</div>
-<a href="/">Back</a>
+<a href="/projects">Back</a>
 
 <h3>Stints</h3>
 
@@ -37,5 +37,5 @@
 {/each}
 
 <style>
-  
+
 </style>

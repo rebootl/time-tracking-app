@@ -7,12 +7,13 @@
   --color-in-border: rgb(54, 60, 139);
   --color-text: #fff;
   --color-link: #56ffaa;
+  --text-color-light: slategray;
 
   font-family: sans-serif;
   color: var(--color-text);
 }
 
-h1 {
+h1, h2, h3, h4, h5, h6 {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }

@@ -29,6 +29,14 @@
         </form>
       </div>
     </header>
+    <nav>
+      <div>
+        <a href="/">Stint</a>
+      </div>
+      <div>
+        <a href="/projects">Projects</a>
+      </div>
+    </nav>
     <main class="default-main">
       <slot></slot>
     </main>
@@ -66,5 +74,22 @@
     gap: 15px;
     padding: 15px;
     min-height: calc(100vh - 50px);
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-in-bg);
+
+    border-bottom: 1px solid var(--color-in-border);
+  }
+  nav div {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    gap: 5px;
+    border-right: 1px solid var(--color-in-border);
+  }
+  nav div a {
+    color: var(--color-in-text);
   }
 </style>

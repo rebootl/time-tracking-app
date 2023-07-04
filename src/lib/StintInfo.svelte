@@ -28,10 +28,10 @@
   {#if overview && project}
   <strong>
     <div class="line">
-        <span class="project-color" style="background-color: {project.color}"></span>
-        {project.name}
-      </div>
-    </strong>
+      <span class="project-color" style="background-color: {project.color}"></span>
+      {project.name}
+    </div>
+  </strong>
   {/if}
 
   <table>
@@ -66,10 +66,12 @@
         <td>{duration}</td>
       </tr>
     {/if}
-    <tr>
-      <td>Comment:</td>
-      <td>{stint.comment}</td>
-    </tr>
+    {#if stint.comment}
+      <tr>
+        <td>Comment:</td>
+        <td>{stint.comment}</td>
+      </tr>
+    {/if}
   </table>
 
 <!--
@@ -132,5 +134,8 @@
   }
   .line {
     display: flex;
+  }
+  td:first-child {
+    color: var(--text-color-light);
   }
 </style>
