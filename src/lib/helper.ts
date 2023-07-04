@@ -4,6 +4,10 @@ function getTime(date: Date) {
   return dayjs(date).format('HH:mm');
 }
 
+function getDate(date: Date) {
+  return dayjs(date).format('DD.MM.YYYY');
+}
+
 function getDateTime(date: Date) {
   return dayjs(date).format('ddd DD.MM.YYYY HH:mm');
 }
@@ -22,4 +26,4 @@ function getLocaleDateTimeStr(date: Date) {
   return dayjs(date).format('YYYY-MM-DDTHH:mm');
 }
 
-export { getTime, getDateTime, getDuration, getLocaleDateTimeStr };
+export { getTime, getDate, getDateTime, getDuration, getLocaleDateTimeStr };

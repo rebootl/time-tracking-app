@@ -1,57 +1,15 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { getTime, getDuration } from '$lib/helper';
+  import StintInfo from '$lib/StintInfo.svelte';
 
   export let data: PageData;
-
-  let duration = "";
-  let durationInterval : ReturnType<typeof setTimeout> | null = null;
-
-  if (data.lastStint && !data.lastStint.end && !durationInterval) {
-    durationInterval = setInterval(
-      () => duration = getDuration(data.lastStint!.start, new Date()),
-      1000
-    );
-  }
 
 </script>
 
 <h2>Stint</h2>
 
 {#if data.lastStint}
-<div class="form-box">
-  <div>
-    <div>
-      Status:
-      <em>
-        {#if data.lastStint.end}Ended{:else}Running{/if}
-      </em>
-    </div>
-    <div class="line">
-      Project:&nbsp;
-      <div class="project-color" style="background-color: {data.lastStint.project.color}"></div>
-      {data.lastStint.project.name}
-    </div>
-    <div>Start: {getTime(data.lastStint.start)}</div>
-    {#if data.lastStint.end}
-      <div>End: {getTime(data.lastStint.end)}</div>
-      <div>Duration: {getDuration(data.lastStint.start, data.lastStint.end)}</div>
-    {:else}
-      <div>Duration: {duration}</div>
-    {/if}
-    <div>Comment: {data.lastStint.comment}</div>
-  </div>
-  {#if !data.lastStint.end}
-    <form action="?/endStint" method="POST">
-      <input type="hidden" name="stintId" value="{data.lastStint.id}" />
-      <button>END STINT</button>
-    </form>
-  {:else}
-    <div>
-      <a href="/edit-stint/{data.lastStint.id}">Edit / Delete Stint</a>
-    </div>
-  {/if}
-</div>
+  <StintInfo stint={data.lastStint} project={data.lastStint.project} />
 {/if}
 
 <h3>New Stint</h3>
@@ -131,8 +89,5 @@
   }
   .project-link {
     margin-left: auto;
-  }
-  .line {
-    display: flex;
   }
 </style>
