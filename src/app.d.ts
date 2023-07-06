@@ -9,14 +9,6 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
-  interface User {
-    id: number;
-    name: string;
-  }
-  interface ClientLocals {
-    loggedIn: boolean;
-    username: string | null;
-  }
 }
 
 export {};

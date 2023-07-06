@@ -1,5 +1,4 @@
 <script lang="ts">
-  //import type { PageData } from './$types';
   import ProjectLine from '$lib/ProjectLine.svelte';
   import OverviewChart from '$lib/OverviewChart.svelte';
 
