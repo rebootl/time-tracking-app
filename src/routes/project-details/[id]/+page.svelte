@@ -2,6 +2,7 @@
   import type { Project, Stint } from '@prisma/client';
   import StintInfo from '$lib/StintInfo.svelte';
   import ProjectLine from '$lib/ProjectLine.svelte';
+  import Chart from '$lib/Chart.svelte';
 
   export let data: {
     project: Project,
@@ -39,6 +40,10 @@
 
 <ProjectLine project={data.project} strong={true} edit={true} />
 
+<div class="chart-box">
+  <Chart stints={data.stints} project={data.project} />
+</div>
+
 <table>
   <tr>
     {#if data.project.description}
@@ -56,7 +61,7 @@
   </tr>
 </table>
 
-<a href="/projects">Back</a>
+<!--<a href="/projects">Back</a>-->
 
 <h3>Stints</h3>
 
@@ -65,6 +70,10 @@
 {/each}
 
 <style>
+  .chart-box {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
   td:first-child {
     color: var(--text-color-light);
   }

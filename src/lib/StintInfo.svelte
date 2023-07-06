@@ -9,6 +9,7 @@
   }*/
 
   export let stint: Stint;
+  // -> when is this null?
   export let project: Project | null = null;
   export let overview = true;
 
@@ -27,7 +28,7 @@
 <div class="box" style={ !stint.end && project ? `border: 1px solid ${project.color}` : '' }>
 
   {#if overview && project}
-    <ProjectLine project={project} strong={true} />
+    <ProjectLine project={project} strong={true} details={true} />
   {/if}
 
   <table>
