@@ -1,15 +1,21 @@
 import { fail, redirect } from '@sveltejs/kit';
 import prisma from '$lib/server/prisma';
-import type { PageServerLoad } from './$types';
+
+//import type { PageServerLoad } from './$types';
+
 import type { Project } from '@prisma/client';
+import type { ProjectWithStints } from '$lib/types';
 
 export const load = (async ({ locals, params }) => {
 	if (!locals.user) throw redirect(302, `/login`);
 
   // get projects for user from db
-  const projects = await prisma.project.findMany({
+  const projects : ProjectWithStints[] = await prisma.project.findMany({
     where: {
       userId: locals.user.id as number
+    },
+    include: {
+      stints: true
     },
     // sort by created date
     orderBy: {
@@ -17,27 +23,10 @@ export const load = (async ({ locals, params }) => {
     }
   });
 
-  const lastStint = await prisma.stint.findFirst({
-    where: {
-      userId: locals.user.id as number
-    },
-    // get project as well
-    include: {
-      project: true
-    },
-    // sort by created date
-    orderBy: {
-      createdAt: 'desc'
-    },
-    // limit
-    take: 1,
-  });
-
   return {
     projects: projects,
-    lastStint: lastStint,
   };
-}) satisfies PageServerLoad;
+});
 
 // needed when coming from login via redirect (POST)
 export const actions = {

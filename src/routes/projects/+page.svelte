@@ -1,12 +1,19 @@
 <script lang="ts">
-  import type { PageData } from './$types';
+  //import type { PageData } from './$types';
   import ProjectLine from '$lib/ProjectLine.svelte';
+  import OverviewChart from '$lib/OverviewChart.svelte';
 
-  export let data: PageData;
+  import type { ProjectWithStints } from '$lib/types';
+
+  export let data: {
+    projects: ProjectWithStints[]
+  };
 
 </script>
 
 <h2>Projects</h2>
+
+<OverviewChart projects={data.projects} />
 
 <div class="projects-list">
   {#each data.projects as project}

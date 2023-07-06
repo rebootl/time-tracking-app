@@ -14,9 +14,13 @@
   //export let startDate : Date = dayjs(endDate).subtract(5, 'day').toDate();
   export let startDate : Date = stints.at(-1)?.start ?? new Date();
 
+  //console.log(startDate);
+  //console.log(endDate);
+
   function generateGraph() {
     // create array of dates between start and end date
-    const ndays : number = dayjs(endDate).diff(dayjs(startDate), 'day');
+    const ndays : number = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
+    console.log(ndays);
     const days : Date[] = new Array(ndays)
       .fill(0)
       .map((_, i) => dayjs(startDate).add(i, 'day').toDate());
