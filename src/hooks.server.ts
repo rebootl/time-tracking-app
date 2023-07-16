@@ -1,7 +1,9 @@
 import prisma from '$lib/server/prisma';
 import { COOKIENAME } from '$env/static/private';
 
-export async function handle({ event, resolve }) {
+import type { Handle } from '@sveltejs/kit';
+
+export const handle = (async ({ event, resolve }) => {
 
   const sessionId = event.cookies.get(COOKIENAME);
 
@@ -18,13 +20,18 @@ export async function handle({ event, resolve }) {
   }
 
   if (r) {
-    event.locals.user = {
-      name: r.user.name,
-      id: r.user.id,
+    event.locals = {
+      user: {
+        name: r.user.name,
+        id: r.user.id,
+      }
     };
   } else {
-    event.locals.user = null;
+    event.locals = {
+      user: null,
+    };
   }
 
-	return await resolve(event);
-}
+  const response = await resolve(event);
+  return response;
+}) satisfies Handle;

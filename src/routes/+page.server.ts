@@ -1,15 +1,15 @@
 import { fail, redirect } from '@sveltejs/kit';
 import prisma from '$lib/server/prisma';
-import type { PageServerLoad } from './$types';
-import type { Project } from '@prisma/client';
 
-export const load = (async ({ locals, params }) => {
+import type { PageServerLoad, Actions } from './$types';
+
+export const load = (async ({ locals }) => {
 	if (!locals.user) throw redirect(302, `/login`);
 
   // get projects for user from db
   const projects = await prisma.project.findMany({
     where: {
-      userId: locals.user.id as number
+      userId: locals.user.id
     },
     // sort by created date
     orderBy: {
@@ -19,7 +19,7 @@ export const load = (async ({ locals, params }) => {
 
   const lastStint = await prisma.stint.findFirst({
     where: {
-      userId: locals.user.id as number
+      userId: locals.user.id
     },
     // get project as well
     include: {
@@ -36,12 +36,13 @@ export const load = (async ({ locals, params }) => {
   return {
     projects: projects,
     lastStint: lastStint,
+    //foo: "bar",
   };
 }) satisfies PageServerLoad;
 
 // needed when coming from login via redirect (POST)
 export const actions = {
-  addProject: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
+  addProject: async ({ locals, request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -60,11 +61,11 @@ export const actions = {
     try {
       r = await prisma.project.create({
         data: {
-          userId: locals.user.id as number,
+          userId: locals.user.id,
           name: name,
           description: description,
           color: color,
-        } as Project
+        }
       });
     } catch (e) {
       if (e instanceof Error) {
@@ -77,7 +78,7 @@ export const actions = {
 
     console.log("added Project", r);
   },
-  addStint: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
+  addStint: async ({ locals, request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -90,7 +91,7 @@ export const actions = {
 
     const currentStint = await prisma.stint.findFirst({
       where: {
-        userId: locals.user.id as number,
+        userId: locals.user.id,
         end: null,
       },
     });
@@ -121,7 +122,7 @@ export const actions = {
     try {
       r = await prisma.stint.create({
         data: {
-          userId: locals.user.id as number,
+          userId: locals.user.id,
           projectId: parseInt(projectId),
           comment: comment,
         }
@@ -137,7 +138,7 @@ export const actions = {
 
     console.log("added Stint", r);
   },
-  endStint: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
+  endStint: async ({ locals, request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -166,4 +167,4 @@ export const actions = {
 
     console.log("ended Stint", r);
   }
-};
+} satisfies Actions;

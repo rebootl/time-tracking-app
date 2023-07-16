@@ -1,7 +1,8 @@
+import type { ClientLocals } from '$lib/types';
 
-export async function load({ data }: { data: ClientLocals }) {
-  // -> how to do this better?
-  const clientData = data; // as ClientLocals; // Type assertion
+export async function load({ data }) {
+
+  const clientData = data;
 
   //console.log(clientData);
 

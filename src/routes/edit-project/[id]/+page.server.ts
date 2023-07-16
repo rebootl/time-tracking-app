@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import prisma from '$lib/server/prisma';
-import type { PageServerLoad } from './$types';
+
+import type { PageServerLoad, Actions } from './$types';
 
 export const load = (async ({ locals, params }) => {
 	if (!locals.user) throw redirect(302, `/login`);
@@ -11,18 +12,19 @@ export const load = (async ({ locals, params }) => {
   // get project from db
   const project = await prisma.project.findFirst({
     where: {
-      userId: locals.user.id as number,
+      userId: locals.user.id,
       id: parseInt(id),
     },
   });
 
+  if (!project) return fail(400, { id, error: "Project not found" });
   return {
     project: project,
   };
 }) satisfies PageServerLoad;
 
 export const actions = {
-  updateProject: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
+  updateProject: async ({ locals, request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -45,7 +47,7 @@ export const actions = {
       // verify the project belongs to the user
       const project = await prisma.project.findFirst({
         where: {
-          userId: locals.user.id as number,
+          userId: locals.user.id,
           id: parseInt(projectId),
         },
       });
@@ -73,7 +75,7 @@ export const actions = {
     console.log("Updated project:", r);
     throw redirect(302, '/');
   },
-  deleteProject: async ({ locals, request }: { locals: App.Locals, request: Request }) => {
+  deleteProject: async ({ locals, request }) => {
     if (!locals.user) throw redirect(302, `/login`);
 
     const data = await request.formData();
@@ -86,7 +88,7 @@ export const actions = {
       // verify the project belongs to the user
       const project = await prisma.project.findFirst({
         where: {
-          userId: locals.user.id as number,
+          userId: locals.user.id,
           id: parseInt(projectId),
         },
       });
@@ -109,4 +111,4 @@ export const actions = {
     console.log("Deleted project:", r);
     throw redirect(302, '/');
   },
-};
+} satisfies Actions;

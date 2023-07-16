@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { PageData } from './$types';
   import StintInfo from '$lib/StintInfo.svelte';
 
-  export let data: PageData;
+  export let data;
 
+  //console.log(data.loggedIn);
 </script>
 
 <h2>Stint</h2>
